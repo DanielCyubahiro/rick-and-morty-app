@@ -48,6 +48,8 @@ const fetchCharacters = async (URL = 'https://rickandmortyapi.com/api/character?
     characters = data.results;
     nextUrl = data.info.next;
     previousUrl = data.info.prev;
+    prevButton.disabled = !previousUrl;
+    nextButton.disabled = !nextUrl;
     maxPages = data.info.pages;
     console.log(data);
 
