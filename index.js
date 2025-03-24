@@ -2,11 +2,9 @@ import {CharacterCard} from './components/CharacterCard/CharacterCard.js';
 
 const cardContainer = document.querySelector('[data-js="card-container"]');
 const searchBarContainer = document.querySelector(
-    '[data-js="search-bar-container"]',
-);
+    '[data-js="search-bar-container"]');
 
 const searchBar = document.querySelector('[data-js="search-bar"]');
-const searchBarInput = document.querySelector('[data-js="search-bar-input"]');
 const navigation = document.querySelector('[data-js="navigation"]');
 const prevButton = document.querySelector('[data-js="button-prev"]');
 const nextButton = document.querySelector('[data-js="button-next"]');
@@ -23,30 +21,24 @@ let searchQuery = '';
 
 //Pagination
 
-nextButton.addEventListener('click', () => {
-  fetchCharacters(nextUrl);
-  pagination.textContent =
-      currentPage >= maxPages
-          ? `${maxPages}/{${maxPages}}`
-          : `${++currentPage}/${maxPages}`;
+nextButton.addEventListener('click', async () => {
+  await fetchCharacters(nextUrl);
+  pagination.textContent = currentPage >= maxPages
+      ? `${maxPages}/{${maxPages}}`
+      : `${++currentPage}/${maxPages}`;
 });
-prevButton.addEventListener('click', () => {
-  fetchCharacters(previousUrl);
-  pagination.textContent =
-      currentPage <= 1
-          ? `${minPages}/${maxPages}`
-          : `${--currentPage}/${maxPages}`;
+prevButton.addEventListener('click', async () => {
+  await fetchCharacters(previousUrl);
+  pagination.textContent = currentPage <= 1
+      ? `${minPages}/${maxPages}`
+      : `${--currentPage}/${maxPages}`;
 });
 
 //API
-const fetchCharacters = async (
-    URL = 'https://rickandmortyapi.com/api/character?page=1',
-) => {
+const fetchCharacters = async (URL = 'https://rickandmortyapi.com/api/character?page=1') => {
   try {
-    const response = await fetch(
-        `${URL}&name=${searchQuery}` ??
-        'https://rickandmortyapi.com/api/character?page=1',
-    );
+    const url = searchQuery ? `${URL}&name=${searchQuery}` : URL;
+    const response = await fetch(url);
     const data = await response.json();
 
     if (!response.ok) {
@@ -69,17 +61,15 @@ const fetchCharacters = async (
   }
 };
 
-fetchCharacters();
+await fetchCharacters();
 pagination.textContent = `${currentPage}/${maxPages}`;
 
-searchBar.addEventListener('submit', (event) => {
+searchBar.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   searchQuery = searchBar.querySelector('input').value;
 
-  console.log(searchQuery);
-  fetchCharacters().then(() => {
-    currentPage = 1;
-    pagination.textContent = `${currentPage}/${maxPages}`;
-  });
+  await fetchCharacters();
+  currentPage = 1;
+  pagination.textContent = `${currentPage}/${maxPages}`;
 });
