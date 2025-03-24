@@ -40,7 +40,7 @@ prevButton.addEventListener("click", () => {
 
 //API
 const fetchCharacters = async (
-  URL = "https://rickandmortyapi.com/api/character?page=1&name"
+  URL = "https://rickandmortyapi.com/api/character?page=1"
 ) => {
   try {
     const response = await fetch(
