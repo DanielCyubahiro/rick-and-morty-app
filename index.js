@@ -23,15 +23,18 @@ prevButton.addEventListener('click', () => fetchCharacters(previousUrl));
 
 const fetchCharacters = async (URL = 'https://rickandmortyapi.com/api/character?page=1') => {
   try {
-    const response = await fetch(
-        URL ?? 'https://rickandmortyapi.com/api/character?page=1');
+    const response = await fetch(URL ?? 'https://rickandmortyapi.com/api/character?page=1');
     const data = await response.json();
+    
+    if(!response.ok) {
+      throw new Error('Failed to fetch characters');
+    }
+    
     characters = data.results;
     nextUrl = data.info.next;
     previousUrl = data.info.prev;
-    console.log(characters);
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    console.error(error);
   }
 };
 
