@@ -13,32 +13,46 @@ const pagination = document.querySelector('[data-js="pagination"]');
 // States
 let previousUrl;
 let nextUrl;
-const maxPage = 1;
-
+const MAX_PAGE = 42;
+const MIN_PAGE = 1;
+let currentPage = 1;
 let characters;
 const searchQuery = '';
 
-nextButton.addEventListener('click', () => fetchCharacters(nextUrl));
-prevButton.addEventListener('click', () => fetchCharacters(previousUrl));
+nextButton.addEventListener('click', () => {
+  fetchCharacters(nextUrl);
+  pagination.textContent = currentPage >= MAX_PAGE
+      ? `${MAX_PAGE}/{${MAX_PAGE}}`
+      : `${++currentPage}/${MAX_PAGE}`;
+});
+prevButton.addEventListener('click', () => {
+  fetchCharacters(previousUrl);
+  pagination.textContent = currentPage <= 1
+      ? `${MIN_PAGE}/${MAX_PAGE}`
+      : `${--currentPage}/${MAX_PAGE}`;
+});
 
 const fetchCharacters = async (URL = 'https://rickandmortyapi.com/api/character?page=1') => {
   try {
-    const response = await fetch(URL ?? 'https://rickandmortyapi.com/api/character?page=1');
+    const response = await fetch(
+        URL ?? 'https://rickandmortyapi.com/api/character?page=1');
     const data = await response.json();
-    
-    if(!response.ok) {
+
+    if (!response.ok) {
       throw new Error('Failed to fetch characters');
     }
-    
+
     characters = data.results;
     nextUrl = data.info.next;
     previousUrl = data.info.prev;
+    console.log(data);
   } catch (error) {
     console.error(error);
   }
 };
 
 fetchCharacters();
+pagination.textContent = `${currentPage}/${MAX_PAGE}`;
 
 //Card Creation
 const rickSanchez = {
