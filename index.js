@@ -6,6 +6,7 @@ const searchBarContainer = document.querySelector(
 );
 
 const searchBar = document.querySelector('[data-js="search-bar"]');
+const searchBarInput = document.querySelector('[data-js="search-bar-input"]');
 const navigation = document.querySelector('[data-js="navigation"]');
 const prevButton = document.querySelector('[data-js="button-prev"]');
 const nextButton = document.querySelector('[data-js="button-next"]');
@@ -18,7 +19,7 @@ const MAX_PAGE = 42;
 const MIN_PAGE = 1;
 let currentPage = 1;
 let characters;
-const searchQuery = "";
+let searchQuery = "";
 
 //Pagination
 
@@ -39,11 +40,12 @@ prevButton.addEventListener("click", () => {
 
 //API
 const fetchCharacters = async (
-  URL = "https://rickandmortyapi.com/api/character?page=1"
+  URL = "https://rickandmortyapi.com/api/character?page=1&name"
 ) => {
   try {
     const response = await fetch(
-      URL ?? "https://rickandmortyapi.com/api/character?page=1"
+      `${URL}&name=${searchQuery}` ??
+        "https://rickandmortyapi.com/api/character?page=1"
     );
     const data = await response.json();
 
@@ -55,28 +57,25 @@ const fetchCharacters = async (
     nextUrl = data.info.next;
     previousUrl = data.info.prev;
     console.log(data);
-    const characters = data.results;
+
     cardContainer.innerHTML = "";
     characters.forEach((character) => {
       const card = CharacterCard(character);
       cardContainer.appendChild(card);
     });
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 fetchCharacters();
 pagination.textContent = `${currentPage}/${MAX_PAGE}`;
 
-//Card Creation
-const rickSanchez = {
-  name: "Rick Sanchez",
-  image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-  status: "Alive",
-  type: "",
-  occurrences: 51,
-};
+searchBar.addEventListener("submit", (event) => {
+  event.preventDefault();
 
-const card = CharacterCard(rickSanchez);
-cardContainer.appendChild(card);
+  searchQuery = searchBar.querySelector("input").value;
+
+  console.log(searchQuery);
+  fetchCharacters();
+});
