@@ -1,9 +1,13 @@
 import {CharacterCard} from './components/CharacterCard/CharacterCard.js';
 
+// Config
+const API_BASE_URL = 'https://rickandmortyapi.com/api/character';
+const DEFAULT_PAGE = 1;
+
+// DOM Elements
 const cardContainer = document.querySelector('[data-js="card-container"]');
 const searchBarContainer = document.querySelector(
     '[data-js="search-bar-container"]');
-
 const searchBar = document.querySelector('[data-js="search-bar"]');
 const navigation = document.querySelector('[data-js="navigation"]');
 const prevButton = document.querySelector('[data-js="button-prev"]');
@@ -11,67 +15,84 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
-let previousUrl;
-let nextUrl;
-let maxPages = 42;
-const minPages = 1;
-let currentPage = 1;
-let characters;
-let searchQuery = '';
+const state = {
+  currentPage: DEFAULT_PAGE,
+  maxPages: DEFAULT_PAGE,
+  searchQuery: '',
+  nextUrl: null,
+  prevUrl: null,
+  characters: [],
+};
 
-//Pagination
+const renderCharacters = (characters) => {
+  cardContainer.innerHTML = '';
+  characters.forEach((character) => {
+    const card = CharacterCard(character);
+    cardContainer.appendChild(card);
+  });
+};
 
-nextButton.addEventListener('click', async () => {
-  await fetchCharacters(nextUrl);
-  pagination.textContent = currentPage >= maxPages
-      ? `${maxPages}/{${maxPages}}`
-      : `${++currentPage}/${maxPages}`;
-});
-prevButton.addEventListener('click', async () => {
-  await fetchCharacters(previousUrl);
-  pagination.textContent = currentPage <= 1
-      ? `${minPages}/${maxPages}`
-      : `${--currentPage}/${maxPages}`;
-});
+const updatePagination = () => {
+  pagination.textContent = `${state.currentPage}/${state.maxPages}`;
+  prevButton.disabled = !state.prevUrl;
+  nextButton.disabled = !state.nextUrl;
+};
 
-//API
-const fetchCharacters = async (URL = 'https://rickandmortyapi.com/api/character?page=1') => {
+//API Calls
+const fetchCharacters = async (url = `${API_BASE_URL}?page=${DEFAULT_PAGE}`) => {
   try {
-    const url = searchQuery ? `${URL}&name=${searchQuery}` : URL;
-    const response = await fetch(url);
-    const data = await response.json();
+    const apiUrl = state.searchQuery ? `${url}&name=${state.searchQuery}` : url;
+    const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      throw new Error('Failed to fetch characters');
+      if (response.status === 404) {
+        cardContainer.innerHTML = `<p>Character not found!.</p>`;
+        throw new Error('Character not found!');
+      } else {
+        throw new Error('Failed to fetch characters');
+      }
     }
 
-    characters = data.results;
-    nextUrl = data.info.next;
-    previousUrl = data.info.prev;
-    prevButton.disabled = !previousUrl;
-    nextButton.disabled = !nextUrl;
-    maxPages = data.info.pages;
-    console.log(data);
+    const data = await response.json();
 
-    cardContainer.innerHTML = '';
-    characters.forEach((character) => {
-      const card = CharacterCard(character);
-      cardContainer.appendChild(card);
-    });
+    state.characters = data.results;
+    state.nextUrl = data.info.next;
+    state.prevUrl = data.info.prev;
+    state.maxPages = data.info.pages;
+
+    renderCharacters(state.characters);
+    updatePagination();
   } catch (error) {
-    console.log(error);
+    console.error('Fetch error:', error);
+    cardContainer.innerHTML = `<p>${error.message}</p>`;
   }
 };
 
-await fetchCharacters();
-pagination.textContent = `${currentPage}/${maxPages}`;
+//Event handlers
+const handleNextPage = async () => {
+  if (state.nextUrl) {
+    await fetchCharacters(state.nextUrl);
+    state.currentPage++;
+    updatePagination();
+  }
+};
+const handlePrevPage = async () => {
+  if (state.prevUrl) {
+    await fetchCharacters(state.prevUrl);
+    state.currentPage--;
+    updatePagination();
+  }
+};
 
-searchBar.addEventListener('submit', async (event) => {
-  event.preventDefault();
+const handleSearch = async (e) => {
+  e.preventDefault();
+  state.searchQuery = e.target.querySelector('input').value;
+  state.currentPage = DEFAULT_PAGE;
+  fetchCharacters();
+};
 
-  searchQuery = searchBar.querySelector('input').value;
+prevButton.addEventListener('click', handlePrevPage);
+nextButton.addEventListener('click', handleNextPage);
+searchBar.addEventListener('submit', handleSearch);
 
-  await fetchCharacters();
-  currentPage = 1;
-  pagination.textContent = `${currentPage}/${maxPages}`;
-});
+fetchCharacters();
