@@ -31,7 +31,6 @@ prevButton.addEventListener('click', () => {
       ? `${MIN_PAGE}/${MAX_PAGE}`
       : `${--currentPage}/${MAX_PAGE}`;
 });
-
 const fetchCharacters = async (URL = 'https://rickandmortyapi.com/api/character?page=1') => {
   try {
     const response = await fetch(
@@ -46,6 +45,12 @@ const fetchCharacters = async (URL = 'https://rickandmortyapi.com/api/character?
     nextUrl = data.info.next;
     previousUrl = data.info.prev;
     console.log(data);
+    const characters = data.results;
+    cardContainer.innerHTML = "";
+    characters.forEach((character) => {
+      const card = CharacterCard(character);
+      cardContainer.appendChild(card);
+    });
   } catch (error) {
     console.error(error);
   }
