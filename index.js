@@ -98,8 +98,4 @@ const fetchCharacters = async (url = `${API_BASE_URL}?page=${DEFAULT_PAGE}`) => 
   }
 };
 
-// prevButton.addEventListener('click', handlePrevPage);
-// nextButton.addEventListener('click', handleNextPage);
-// searchBar.addEventListener('submit', handleSearch);
-
 fetchCharacters();
