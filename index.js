@@ -1,8 +1,8 @@
-import { CharacterCard } from "./components/CharacterCard/CharacterCard.js";
+import {CharacterCard} from './components/CharacterCard/CharacterCard.js';
 
 const cardContainer = document.querySelector('[data-js="card-container"]');
 const searchBarContainer = document.querySelector(
-  '[data-js="search-bar-container"]'
+    '[data-js="search-bar-container"]',
 );
 
 const searchBar = document.querySelector('[data-js="search-bar"]');
@@ -15,50 +15,51 @@ const pagination = document.querySelector('[data-js="pagination"]');
 // States
 let previousUrl;
 let nextUrl;
-const MAX_PAGE = 42;
-const MIN_PAGE = 1;
+let maxPages = 42;
+const minPages = 1;
 let currentPage = 1;
 let characters;
-let searchQuery = "";
+let searchQuery = '';
 
 //Pagination
 
-nextButton.addEventListener("click", () => {
+nextButton.addEventListener('click', () => {
   fetchCharacters(nextUrl);
   pagination.textContent =
-    currentPage >= MAX_PAGE
-      ? `${MAX_PAGE}/{${MAX_PAGE}}`
-      : `${++currentPage}/${MAX_PAGE}`;
+      currentPage >= maxPages
+          ? `${maxPages}/{${maxPages}}`
+          : `${++currentPage}/${maxPages}`;
 });
-prevButton.addEventListener("click", () => {
+prevButton.addEventListener('click', () => {
   fetchCharacters(previousUrl);
   pagination.textContent =
-    currentPage <= 1
-      ? `${MIN_PAGE}/${MAX_PAGE}`
-      : `${--currentPage}/${MAX_PAGE}`;
+      currentPage <= 1
+          ? `${minPages}/${maxPages}`
+          : `${--currentPage}/${maxPages}`;
 });
 
 //API
 const fetchCharacters = async (
-  URL = "https://rickandmortyapi.com/api/character?page=1"
+    URL = 'https://rickandmortyapi.com/api/character?page=1',
 ) => {
   try {
     const response = await fetch(
-      `${URL}&name=${searchQuery}` ??
-        "https://rickandmortyapi.com/api/character?page=1"
+        `${URL}&name=${searchQuery}` ??
+        'https://rickandmortyapi.com/api/character?page=1',
     );
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error("Failed to fetch characters");
+      throw new Error('Failed to fetch characters');
     }
 
     characters = data.results;
     nextUrl = data.info.next;
     previousUrl = data.info.prev;
+    maxPages = data.info.pages;
     console.log(data);
 
-    cardContainer.innerHTML = "";
+    cardContainer.innerHTML = '';
     characters.forEach((character) => {
       const card = CharacterCard(character);
       cardContainer.appendChild(card);
@@ -69,13 +70,16 @@ const fetchCharacters = async (
 };
 
 fetchCharacters();
-pagination.textContent = `${currentPage}/${MAX_PAGE}`;
+pagination.textContent = `${currentPage}/${maxPages}`;
 
-searchBar.addEventListener("submit", (event) => {
+searchBar.addEventListener('submit', (event) => {
   event.preventDefault();
 
-  searchQuery = searchBar.querySelector("input").value;
+  searchQuery = searchBar.querySelector('input').value;
 
   console.log(searchQuery);
-  fetchCharacters();
+  fetchCharacters().then(() => {
+    currentPage = 1;
+    pagination.textContent = `${currentPage}/${maxPages}`;
+  });
 });
