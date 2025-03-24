@@ -1,4 +1,7 @@
 import {CharacterCard} from './components/CharacterCard/CharacterCard.js';
+import {NavButton} from './components/NavButton/NavButton.js';
+import {NavPagination} from './components/NavPagination/NavPagination.js';
+import {SearchBar} from './components/SearchBar/SearchBar.js';
 
 // Config
 const API_BASE_URL = 'https://rickandmortyapi.com/api/character';
@@ -6,13 +9,8 @@ const DEFAULT_PAGE = 1;
 
 // DOM Elements
 const cardContainer = document.querySelector('[data-js="card-container"]');
-const searchBarContainer = document.querySelector(
-    '[data-js="search-bar-container"]');
-const searchBar = document.querySelector('[data-js="search-bar"]');
+const searchBarContainer = document.querySelector('[data-js="search-bar-container"]');
 const navigation = document.querySelector('[data-js="navigation"]');
-const prevButton = document.querySelector('[data-js="button-prev"]');
-const nextButton = document.querySelector('[data-js="button-next"]');
-const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
 const state = {
@@ -23,6 +21,38 @@ const state = {
   prevUrl: null,
   characters: [],
 };
+
+//Event handlers
+const handleNextPage = async () => {
+  if (state.nextUrl) {
+    await fetchCharacters(state.nextUrl);
+    state.currentPage++;
+    updatePagination();
+  }
+};
+const handlePrevPage = async () => {
+  if (state.prevUrl) {
+    await fetchCharacters(state.prevUrl);
+    state.currentPage--;
+    updatePagination();
+  }
+};
+const handleSearch = async (e) => {
+  e.preventDefault();
+  state.searchQuery = e.target.querySelector('input').value;
+  state.currentPage = DEFAULT_PAGE;
+  fetchCharacters();
+};
+
+
+// Initialize UI components
+const prevButton = NavButton('prev', handlePrevPage);
+const nextButton = NavButton('next', handleNextPage);
+const pagination = NavPagination(state.currentPage, state.maxPages);
+const searchBar = SearchBar(handleSearch);
+
+navigation.append(prevButton, pagination, nextButton);
+searchBarContainer.append(searchBar);
 
 const renderCharacters = (characters) => {
   cardContainer.innerHTML = '';
@@ -68,31 +98,8 @@ const fetchCharacters = async (url = `${API_BASE_URL}?page=${DEFAULT_PAGE}`) => 
   }
 };
 
-//Event handlers
-const handleNextPage = async () => {
-  if (state.nextUrl) {
-    await fetchCharacters(state.nextUrl);
-    state.currentPage++;
-    updatePagination();
-  }
-};
-const handlePrevPage = async () => {
-  if (state.prevUrl) {
-    await fetchCharacters(state.prevUrl);
-    state.currentPage--;
-    updatePagination();
-  }
-};
-
-const handleSearch = async (e) => {
-  e.preventDefault();
-  state.searchQuery = e.target.querySelector('input').value;
-  state.currentPage = DEFAULT_PAGE;
-  fetchCharacters();
-};
-
-prevButton.addEventListener('click', handlePrevPage);
-nextButton.addEventListener('click', handleNextPage);
-searchBar.addEventListener('submit', handleSearch);
+// prevButton.addEventListener('click', handlePrevPage);
+// nextButton.addEventListener('click', handleNextPage);
+// searchBar.addEventListener('submit', handleSearch);
 
 fetchCharacters();
