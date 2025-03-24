@@ -12,8 +12,7 @@ const maxPage = 1;
 const page = 1;
 const searchQuery = "";
 
-feature/card-creation
-//Card Creation
+//card creation
 import { CharacterCard } from "./components/CharacterCard/CharacterCard.js";
 
 const cardContainer = document.querySelector('[data-js="card-container"]');
@@ -27,7 +26,7 @@ const rickSanchez = {
 
 const card = CharacterCard(rickSanchez);
 cardContainer.appendChild(card);
-=======
+
 //API
 async function fetchCharacters() {
   const url = "https://rickandmortyapi.com/api/character";
@@ -39,10 +38,15 @@ async function fetchCharacters() {
     }
     const data = await response.json();
     console.log(data);
+    const characters = data.results;
+    cardContainer.innerHTML = "";
+    characters.forEach((character) => {
+      const card = CharacterCard(character);
+      cardContainer.appendChild(card);
+    });
   } catch (error) {
     console.error("There was a problem with the fetch operation:", error);
   }
 }
 
 fetchCharacters();
-main
