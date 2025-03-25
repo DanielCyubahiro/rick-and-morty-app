@@ -3,8 +3,6 @@
 @import "components/NavButton/NavButton.css";
 @import "components/NavPagination/NavPagination.css";
 
-@use postcss-nested;
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -68,6 +66,7 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   width: 100%;
   margin-bottom: rem;
   margin-top: 8rem
+  
 }
 
 .search-bar {
@@ -80,6 +79,7 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   width: 40%;
   max-width: 600px;
   padding-left: 10px;
+  border: solid black;
 }
 
 .search-bar__input {
@@ -101,6 +101,7 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   cursor: pointer;
   display: flex;
   justify-content: center;
+  border: solid black;
 }
 .search-bar__button:hover {
   background-color: #00ff00;
@@ -124,6 +125,7 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   overflow: hidden;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
   font-family: "Orbitron", sans-serif;
+  border: solid black;
   
 }
 
@@ -136,7 +138,7 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-bottom: 5px solid #00e64d;
+  border-bottom: 5px solid #152119;
   transition: opacity 0.3s ease;
 }
 
@@ -163,7 +165,7 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
 .navigation button {
   padding: 10px 15px;
   background-color: #b1f26d; /* Same Rick and Morty Green */
-  border: none;
+  border: solid black;
   border-radius: 5px;
   color: #333;
   cursor: pointer;
