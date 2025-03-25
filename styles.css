@@ -9,7 +9,6 @@
   padding: 0;
 }
 
-
 :root {
   --color-primary: rgb(204, 68, 68);
   --color-secondary: #f6f6f6;
@@ -17,10 +16,12 @@
 }
 
 body {
+  display: flex;
   font-family: var(--font-family);
   color: var(--color-primary);
   padding: 20px;
   background-color: #4a5a65;
+  justify-content: center;
 }
 
 main {
@@ -29,24 +30,22 @@ main {
   gap: 10px;
 }
 
-
 .title {
-  position:absolute;
+  position: absolute;
   width: 100%;
   text-align: center;
-  font-family: 'Get Schwifty';
+  font-family: "Get Schwifty";
   font-size: 5em;
-  color: #08BAE3;
+  color: #08bae3;
   z-index: 50;
-  -webkit-text-stroke: 1px rgba(0,0,0,0.5);
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
   span {
     font-size: 0.5em;
   }
-
 }
 
 .title.middle {
-  -webkit-text-stroke: 0.1em #FFF765;
+  -webkit-text-stroke: 0.1em #fff765;
   z-index: 49;
 }
 
@@ -56,23 +55,23 @@ main {
 }
 
 @font-face {
-  font-family: 'Get Schwifty';
+  font-family: "Get Schwifty";
 
-src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff') format('woff');
+  src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff")
+    format("woff");
 }
 
 .search-bar-container {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-bottom: rem;
-  margin-top: 8rem
-  
+  margin-bottom: 5 rem;
+  margin-top: 8rem;
 }
 
 .search-bar {
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
   align-items: center;
   background-color: #b1f26d; /* Bright, Rick and Morty Green */
   padding: 10px;
@@ -91,7 +90,6 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   font-size: 1rem;
   background-color: #3b1f64;
   color: #d3a39d;
-  padding
 }
 
 .search-bar__button {
@@ -117,7 +115,6 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   max-width: 1200px;
   margin: 0 auto;
   margin-top: 1rem;
-
 }
 .card {
   background-color: #00b5e2;
@@ -127,7 +124,6 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
   font-family: "Orbitron", sans-serif;
   border: solid black;
-  
 }
 
 .card:hover {
@@ -160,7 +156,10 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 5rem;
+  position: fixed;
+  bottom: 0;
+  justify-content: center;
 }
 
 .navigation button {
@@ -170,7 +169,7 @@ src: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff
   border-radius: 5px;
   color: #333;
   cursor: pointer;
-  margin: 0 10px;
+  margin: 10px;
   font-size: 1rem;
 }
 
